@@ -1,0 +1,111 @@
+<div class="video-list-container">
+  <h2>Video Library</h2>
+  <div class="video-grid">
+
+    <div class="video-card"
+         *ngFor="let video of videos"
+         (click)="openVideo(video.id)">
+
+      <!-- Checkbox in selection mode -->
+      <div *ngIf="selectionMode" class="checkbox">
+        <input type="checkbox"
+               [checked]="selectedIds.has(video.id)"
+               (click)="$event.stopPropagation(); toggleSelect(video.id)" />
+      </div>
+
+      <video [src]="video.url" muted preload="metadata" class="video-thumbnail"></video>
+      <div class="video-info">
+        <h3>{{ video.title }}</h3>
+        <p>{{ video.description }}</p>
+        <span>Type: {{ video.type }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Floating Add Button -->
+<button class="floating-btn add" (click)="openUploadForm()">
+  <i class="fa fa-plus"></i>
+</button>
+
+<!-- Floating Delete Button (only visible in selection mode) -->
+<button *ngIf="selectionMode" class="floating-btn delete" (click)="deleteSelected()">
+  <i class="fa fa-trash"></i>
+</button>
+
+<!-- Floating Toggle Select Button -->
+<button class="floating-btn select" (click)="toggleSelectionMode()">
+  <i class="fa" [ngClass]="selectionMode ? 'fa-times' : 'fa-check-square'"></i>
+</button>
+
+<!-- Upload Modal -->
+<!-- (unchanged) -->
+
+
+<!-- Floating Add Button -->
+<button class="floating-btn" (click)="openUploadForm()">
+    <i class="fa fa-plus"></i>
+</button>
+
+<!-- Upload Modal -->
+<div class="modal" *ngIf="showUploadForm">
+    <div class="modal-content">
+        <h3>Add New Video</h3>
+        <form (ngSubmit)="saveVideo()" #videoForm="ngForm">
+
+            <!-- Video Upload -->
+            <label>Upload Video</label>
+            <label class="custom-file-upload">
+                <input type="file" accept="video/*" (change)="onVideoSelected($event)" required />
+                <i class="fa fa-upload"></i> Choose Video
+            </label>
+
+            <!-- Title -->
+            <label>Title</label>
+            <input type="text" [(ngModel)]="newVideo.title" name="title" required />
+
+            <!-- Description -->
+            <label>Description</label>
+            <textarea [(ngModel)]="newVideo.description" name="description" required></textarea>
+
+            <!-- Distribution -->
+            <label>Distribution</label>
+            <input type="text" [(ngModel)]="newVideo.distribution" name="distribution" />
+
+            <!-- Type -->
+            <label>Type</label>
+            <select [(ngModel)]="newVideo.type" name="type">
+                <option value="Romance">Romance</option>
+                <option value="Sci-fi">Sci-fi</option>
+                <option value="Drama">Drama</option>
+                <option value="Comedy">Comedy</option>
+            </select>
+
+            <div class="modal-actions">
+                <button type="submit" class="btn save">Save</button>
+                <button type="button" class="btn cancel" (click)="closeUploadForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal" *ngIf="showQRCode">
+  <div class="modal-content">
+    <h3>Scan QR to Watch Video</h3>
+
+    <!-- QR code -->
+    <qrcode [qrdata]="qrCodeData"></qrcode>
+
+    <!-- Direct link -->
+    <p>{{ qrCodeData }}</p>
+
+    <div class="modal-actions">
+      <button class="btn share" (click)="shareVideo()">Share</button>
+      <button class="btn cancel" (click)="showQRCode = false">Close</button>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,50 @@
+<div class="movie-container">
+    <!-- Video/Trailer Section -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 50px;">
+        <!-- <i class="fa fa-arrow-left"></i>  -->
+        <h3 style="margin: 0;">{{ video?.title }}</h3>
+    </div>
+
+
+
+    <div class="trailer" style="position: relative;">
+        <img *ngIf="!isPlaying && getPoster()" [src]="getPoster()" alt="Thumbnail" class="poster-overlay"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2;" />
+        <video #trailerVideo class="trailer-video" (play)="isPlaying = true" (pause)="isPlaying = false" controls
+            [poster]="getPoster() || 'assets/default-thumbnail.jpg'" style="position: relative; z-index: 1;">
+            <source [src]="video?.url" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Movie Info -->
+    <div class="movie-info">
+        <h2>{{ video?.title }}</h2>
+        <p class="meta">{{ video?.meta }}</p>
+
+        <button class="btn play" (click)="togglePlay(trailerVideo)">
+            <i class="fa" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'"></i>
+            {{ isPlaying ? 'Pause' : 'Play' }}
+        </button>
+        <button class="btn download" (click)="downloadVideo()">
+            <i class="fa fa-download"></i> Download
+        </button>
+
+
+        <div class="description">
+            <h4>Description</h4>
+            <p>
+                {{ video?.description }}
+            </p>
+        </div>
+
+        <div class="distributed">
+            <h4>Distributed</h4>
+            <p>{{ video?.distributed }}</p>
+        </div>
+    </div>
+
+
+
+</div>
+
